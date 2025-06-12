@@ -1,10 +1,10 @@
-FROM alpine:3.18
+FROM debian:stable-slim
 
-COPY setup.sh /setup.sh
-COPY entrypoint.sh /entrypoint.sh
+USER root
+RUN apt update && apt install -y dante-server
 
-RUN chmod +x /setup.sh /entrypoint.sh && /setup.sh
+COPY danted.conf /etc/danted.conf
 
-EXPOSE 8388 8080
+EXPOSE 1080
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["danted", "-f", "/etc/danted.conf"]
