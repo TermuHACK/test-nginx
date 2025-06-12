@@ -27,8 +27,7 @@ RUN curl -L -o v2ray-plugin.tar.gz https://github.com/shadowsocks/v2ray-plugin/r
     && mv /usr/local/bin/v2ray-plugin_linux_amd64 /usr/local/bin/v2ray-plugin \
     && rm v2ray-plugin.tar.gz
 
-RUN wget -O /tmp/ss.tar.gz https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.5/shadowsocks-libev-3.3.5.tar.gz \
-    && tar -xzf /tmp/ss.tar.gz -C /tmp/ \
+RUN cd /tmp && git clone https://github.com/shadowsocks/shadowsocks-libev.git && \
     && cd /tmp/shadowsocks-libev-3.3.5 \
     && ./autogen.sh \
     && ./configure --prefix=/usr --disable-documentation \
@@ -38,7 +37,8 @@ RUN wget -O /tmp/ss.tar.gz https://github.com/shadowsocks/shadowsocks-libev/rele
         $(scanelf --needed --nobanner /usr/bin/ss-* \
         | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
         | sort -u) \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* \
+    && apk del git
 
 
 COPY entrypoint.sh /entrypoint.sh
