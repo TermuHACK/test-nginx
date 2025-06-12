@@ -9,7 +9,7 @@ RUN apk add --no-cache \
 RUN pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip
 
 # Установка gotty (веб-терминал)
-RUN wget https://github.com/yudai/gotty/releases/download/v0.2.0/gotty_linux_amd64.tar.gz && \
+RUN wget https://github.com/yudai/gotty/releases/download/v0.1.0/gotty_linux_amd64.tar.gz && \
     tar -xzf gotty_linux_amd64.tar.gz && \
     mv gotty /usr/local/bin/ && \
     rm gotty_linux_amd64.tar.gz
