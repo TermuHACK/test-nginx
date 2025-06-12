@@ -1,10 +1,24 @@
-FROM debian:stable-slim
+FROM alpine
 
-USER root
-RUN apt update && apt install -y dante-server
+RUN apk add --update \
+    shadowsocks-libev \
+    socat \
+    bash \
+    v2ray-plugin \
+    curl \
+    unzip \
+    && rm -rf /var/cache/apk/*
 
-COPY danted.conf /etc/danted.conf
+RUN mkdir -p /shadowsocks && mkdir -p /xray
 
-EXPOSE 1080
+COPY entrypoint.sh /entrypoint.sh
+COPY config.json /shadowsocks/config.json
+COPY config1.json /xray/config.json
 
-CMD ["danted", "-f", "/etc/danted.conf"]
+EXPOSE 8388 8080
+
+RUN chmod +x /entrypoint.sh
+RUN wget -O xray.zip https://github.com/XTLS/Xray-core/releases/download/v25.6.8/Xray-linux-64.zip && unzip xray.zip -d /xray
+RUN chmod +x /xray/xray
+
+ENTRYPOINT ["/entrypoint.sh"]
