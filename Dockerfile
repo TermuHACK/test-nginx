@@ -12,8 +12,10 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /shadowsocks && mkdir -p /xray
-RUN git clone https://github.com/shadowsocks/v2ray-plugin.git && cd v2ray-plugin && go build
-WORKDIR /
+RUN curl -L -o v2ray-plugin.tar.gz https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.2/v2ray-plugin-linux-amd64-v1.3.2.tar.gz \
+    && tar -xzf v2ray-plugin.tar.gz -C /usr/local/bin \
+    && mv /usr/local/bin/v2ray-plugin_linux_amd64 /usr/local/bin/v2ray-plugin \
+    && rm v2ray-plugin.tar.gz
 
 COPY entrypoint.sh /entrypoint.sh
 COPY config.json /shadowsocks/config.json
