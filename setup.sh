@@ -7,7 +7,7 @@ apk add --no-cache \
     bash curl wget tar unzip git \
     libev-dev c-ares-dev libsodium-dev mbedtls-dev
 
-wget -O /usr/local/bin/gotty https://github.com/yudai/gotty/releases/download/v0.2.0/gotty_linux_amd64
+wget -O /usr/local/bin/gotty https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz
 chmod +x /usr/local/bin/gotty
 
 apk add --no-cache build-base autoconf libtool
