@@ -1,6 +1,7 @@
 FROM alpine
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-RUN apk add --update \
+RUN apk update
+RUN apk add \
     shadowsocks-libev \
     socat \
     git \
