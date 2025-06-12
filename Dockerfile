@@ -3,13 +3,17 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repos
 RUN apk add --update \
     shadowsocks-libev \
     socat \
+    git \
     bash \
     v2ray-plugin \
     curl \
+    go \
     unzip \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /shadowsocks && mkdir -p /xray
+RUN git clone https://github.com/shadowsocks/v2ray-plugin.git && cd v2ray-plugin && go build
+WORKDIR /
 
 COPY entrypoint.sh /entrypoint.sh
 COPY config.json /shadowsocks/config.json
