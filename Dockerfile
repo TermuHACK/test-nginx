@@ -8,7 +8,7 @@ RUN apk add --no-cache \
 RUN pip install --break-system-packages https://github.com/shadowsocks/shadowsocks/archive/master.zip
 
 # Установка gotty
-RUN curl -L https://github.com/yudai/gotty/releases/download/v0.2.0/gotty_linux_amd64.tar.gz | tar xz && \
+RUN curl -L https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz | tar xz && \
     mv gotty /usr/local/bin/
 
 COPY entrypoint.sh /entrypoint.sh
