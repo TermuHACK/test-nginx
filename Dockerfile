@@ -15,6 +15,7 @@ RUN wget https://github.com/yudai/gotty/releases/download/v0.2.0/gotty_linux_amd
     rm gotty_linux_amd64.tar.gz
 
 # Копируем скрипт запуска
+COPY config.json /config.json
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
