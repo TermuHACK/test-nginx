@@ -1,19 +1,23 @@
-FROM alpine:latest
+FROM alpine:3.18
 
+# Установка зависимостей
 RUN apk add --no-cache \
-    python3 py3-pip \
-    iproute2 iptables curl bash
+    bash curl wget tar unzip git build-base openssl-dev libffi-dev \
+    python3 py3-pip
 
-# Установка Shadowsocks с флагом --break-system-packages
-RUN pip install --break-system-packages https://github.com/shadowsocks/shadowsocks/archive/master.zip
+# Установка shadowsocks из GitHub
+RUN pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip
 
-# Установка gotty
-RUN curl -L https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz | tar xz && \
-    mv gotty /usr/local/bin/
+# Установка gotty (веб-терминал)
+RUN wget https://github.com/yudai/gotty/releases/download/v0.2.0/gotty_linux_amd64.tar.gz && \
+    tar -xzf gotty_linux_amd64.tar.gz && \
+    mv gotty /usr/local/bin/ && \
+    rm gotty_linux_amd64.tar.gz
 
+# Копируем скрипт запуска
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8388 8080
+EXPOSE 8388 7681
 
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
