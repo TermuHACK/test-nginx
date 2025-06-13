@@ -29,8 +29,7 @@ RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8
     unzip Xray-linux-64.zip -d /xray && \
     mv /xray/xray /usr/local/bin/ && \
     chmod +x /usr/local/bin/xray && \
-    rm Xray-linux-64.zip && \
-    apk del git
+    rm Xray-linux-64.zip
 
 COPY entrypoint.sh /entrypoint.sh
 COPY config.json /shadowsocks/config.json
