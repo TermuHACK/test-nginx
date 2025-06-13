@@ -26,7 +26,7 @@ RUN mkdir -p /shadowsocks && mkdir -p /xray
 
 # Install xray
 RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip && \
-    unzip xray.zip -d /xray && \
+    unzip Xray-linux-64.zip -d /xray && \
     mv /xray/xray /usr/local/bin/ && \
     chmod +x /usr/local/bin/xray && \
     rm xray.zip && \
