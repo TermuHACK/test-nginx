@@ -1,5 +1,5 @@
 FROM alpine
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk update
 RUN apk add \
     socat \
@@ -19,18 +19,10 @@ RUN apk add \
     linux-headers \
     mbedtls-dev \
     pcre-dev \
+    shadowsocks-libev \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /shadowsocks && mkdir -p /xray
-RUN git clone --depth 1 --branch v3.3.5 https://github.com/shadowsocks/shadowsocks-libev.git /tmp/shadowsocks-libev && \
-    cd /tmp/shadowsocks-libev && \
-    git submodule update --init --recursive && \
-    ./autogen.sh && \
-    ./configure --prefix=/usr --disable-documentation && \
-    make -j$(nproc) install && \
-    ls /usr/bin/ss-* | xargs -n1 setcap 'cap_net_bind_service+ep' && \
-    apk add --no-cache $(scanelf --needed --nobanner /usr/bin/ss-* | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' | sort -u) && \
-    rm -rf /tmp/shadowsocks-libev
 
 # Install xray
 RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip && \
