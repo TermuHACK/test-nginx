@@ -44,7 +44,9 @@ COPY entrypoint.sh /entrypoint.sh
 COPY config.json /shadowsocks/config.json
 COPY config1.json /xray/config.json
 
-EXPOSE 8388 8080
+EXPOSE 8388
+EXPOSE 9999
+EXPOSE 8080
 
 RUN chmod +x /entrypoint.sh
 RUN wget -O xray.zip https://github.com/XTLS/Xray-core/releases/download/v25.6.8/Xray-linux-64.zip && unzip xray.zip -d /xray
