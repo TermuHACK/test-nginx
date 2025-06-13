@@ -22,23 +22,23 @@ RUN apk add \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /shadowsocks && mkdir -p /xray
-RUN curl -L -o v2ray-plugin.tar.gz https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.2/v2ray-plugin-linux-amd64-v1.3.2.tar.gz \
-    && tar -xzf v2ray-plugin.tar.gz -C /usr/local/bin \
-    && mv /usr/local/bin/v2ray-plugin_linux_amd64 /usr/local/bin/v2ray-plugin \
-    && rm v2ray-plugin.tar.gz
+RUN git clone --depth 1 --branch v3.3.5 https://github.com/shadowsocks/shadowsocks-libev.git /tmp/shadowsocks-libev && \
+    cd /tmp/shadowsocks-libev && \
+    git submodule update --init --recursive && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr --disable-documentation && \
+    make -j$(nproc) install && \
+    ls /usr/bin/ss-* | xargs -n1 setcap 'cap_net_bind_service+ep' && \
+    apk add --no-cache $(scanelf --needed --nobanner /usr/bin/ss-* | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' | sort -u) && \
+    rm -rf /tmp/shadowsocks-libev
 
-RUN cd /tmp && git clone --depth 1 --branch v3.3.5 https://github.com/shadowsocks/shadowsocks-libev.git \
-    && cd /tmp/shadowsocks-libev \
-    && ./autogen.sh \
-    && ./configure --prefix=/usr --disable-documentation \
-    && make install \
-    && ls /usr/bin/ss-* | xargs -n1 setcap cap_net_bind_service+ep \
-    && apk add --no-cache \
-        $(scanelf --needed --nobanner /usr/bin/ss-* \
-        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-        | sort -u) \
-    && rm -rf /tmp/* \
-    && apk del git
+# Install xray
+RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip && \
+    unzip xray.zip -d /xray && \
+    mv /xray/xray /usr/local/bin/ && \
+    chmod +x /usr/local/bin/xray && \
+    rm xray.zip && \
+    apk del git
 
 COPY entrypoint.sh /entrypoint.sh
 COPY config.json /shadowsocks/config.json
