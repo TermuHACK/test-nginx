@@ -1,11 +1,14 @@
 FROM alpine:latest
 
 RUN apk update && apk add --no-cache \
-    curl go bash nginx
+    curl go git bash nginx
 
-# Устанавливаем gotty
-RUN go install github.com/yudai/gotty@latest && \
-    cp /root/go/bin/gotty /usr/local/bin && chmod +x /usr/local/bin/gotty
+# Устанавливаем gotty вручную
+RUN git clone https://github.com/yudai/gotty.git /tmp/gotty && \
+    cd /tmp/gotty && \
+    go build -o /usr/local/bin/gotty && \
+    chmod +x /usr/local/bin/gotty && \
+    rm -rf /tmp/gotty
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh /entrypoint.sh
