@@ -1,14 +1,14 @@
 FROM alpine:latest
 
 RUN apk update && apk add --no-cache \
-    curl tar bash file nginx
+    curl tar bash nginx openssh
 
-# Качаем и ставим gotty (v1.0.1), сразу в нужное место
-RUN curl -sSL -o /tmp/gotty.tar.gz https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz && \
-    tar -xzf /tmp/gotty.tar.gz -C /usr/local/bin && \
-    chmod +x /usr/local/bin/gotty && \
-    file /usr/local/bin/gotty && \
-    rm -rf /tmp/gotty.tar.gz
+# Ставим tmate (статичный бинарник)
+RUN curl -Lo /usr/local/bin/tmate https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-amd64.tar.xz && \
+    tar -xf /usr/local/bin/tmate && \
+    mv tmate /usr/local/bin/tmate && \
+    chmod +x /usr/local/bin/tmate && \
+    rm -f tmate-2.4.0-static-linux-amd64.tar.xz
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh /entrypoint.sh
