@@ -1,42 +1,7 @@
 #!/bin/sh
 
-UUID=$(cat /proc/sys/kernel/random/uuid)
+echo "🖥️ Запускаем gotty на 127.0.0.1:9000"
+gotty --port 9000 --permit-write --title-format "🛠 Web Shell" bash &
 
-# Xray конфиг
-cat > /etc/xray-config.json <<EOF
-{
-  "inbounds": [{
-    "port": 10000,
-    "protocol": "vless",
-    "settings": {
-      "clients": [{
-        "id": "$UUID",
-        "flow": ""
-      }],
-      "decryption": "none"
-    },
-    "streamSettings": {
-      "network": "ws",
-      "wsSettings": {
-        "path": "/ws"
-      }
-    }
-  }],
-  "outbounds": [{
-    "protocol": "freedom"
-  }]
-}
-EOF
-
-echo "🎯 UUID: $UUID"
-echo "🔌 VLESS WS: /ws"
-echo "🌐 Proxy: /proxy"
-echo "🖥️ Tmate (через /)"
-
-# запускаем всё в фоне
-tmate -F &
-tinyproxy -d &
-xray -c /etc/xray-config.json &
-
-# nginx в ФГ
+echo "🌐 Запускаем nginx на 0.0.0.0:80"
 nginx -g "daemon off;"
