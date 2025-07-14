@@ -2,6 +2,7 @@
 
 UUID=$(cat /proc/sys/kernel/random/uuid)
 
+# Xray конфиг
 cat > /etc/xray-config.json <<EOF
 {
   "inbounds": [{
@@ -17,7 +18,7 @@ cat > /etc/xray-config.json <<EOF
     "streamSettings": {
       "network": "ws",
       "wsSettings": {
-        "path": "/"
+        "path": "/ws"
       }
     }
   }],
@@ -27,13 +28,15 @@ cat > /etc/xray-config.json <<EOF
 }
 EOF
 
-echo "====================================="
-echo "✅ Xray UUID: $UUID"
-echo "🌐 WebSocket: wss://<render-url>/"
-echo "🌀 TinyProxy: http://<render-url>:8888/"
-echo "====================================="
+echo "🎯 UUID: $UUID"
+echo "🔌 VLESS WS: /ws"
+echo "🌐 Proxy: /proxy"
+echo "🖥️ Tmate (через /)"
 
-tmux new-session -d -s services 'xray -c /etc/xray-config.json'
-tmux split-window -v 'tinyproxy -d'
-tmux split-window -h 'tmate -F'
-tmux attach-session -t services
+# запускаем всё в фоне
+tmate -F &
+tinyproxy -d &
+xray -c /etc/xray-config.json &
+
+# nginx в ФГ
+nginx -g "daemon off;"
