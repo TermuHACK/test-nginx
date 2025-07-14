@@ -1,46 +1,22 @@
-FROM alpine
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-RUN apk update
-RUN apk add \
-    socat \
-    git \
-    bash \
-    curl \
-    go \
-    unzip \
-    autoconf \
-    automake \
-    build-base \
-    c-ares-dev \
-    libcap \
-    libev-dev \
-    libtool \
-    libsodium-dev \
-    linux-headers \
-    mbedtls-dev \
-    pcre-dev \
-    shadowsocks-libev \
-    && rm -rf /var/cache/apk/*
+# Заготовка Dockerfile
+FROM alpine:latest
 
-RUN mkdir -p /shadowsocks && mkdir -p /xray
+RUN apk update && apk add --no-cache curl tmux openssh tinyproxy bash xz unzip && \
+  curl -L https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-amd64.tar.xz \
+  	  | tar -xJ && mv tmate-2.4.0-static-linux-amd64/tmate /usr/local/bin/tmate && \
+  	  chmod +x /usr/local/bin/tmate && rm -rf tmate-2.4.0-static-linux-amd64* && \
+  sed -i 's/^#Allow 127.0.0.1/Allow 0.0.0.0/' /etc/tinyproxy/tinyproxy.conf && \
+  sed -i 's/^Allow 127.0.0.1/#Allow 127.0.0.1/' /etc/tinyproxy/tinyproxy.conf && \
+  sed -i 's/^#LogLevel Info/LogLevel Error/' /etc/tinyproxy/tinyproxy.conf && \
+  echo "MaxClients 100\nStartServers 1\nMinSpareServers 1\nMaxSpareServers 5" >> /etc/tinyproxy/tinyproxy.conf
 
-# Install xray
-RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip && \
-    unzip Xray-linux-64.zip -d /xray && \
-    mv /xray/xray /usr/local/bin/ && \
-    chmod +x /usr/local/bin/xray && \
-    rm Xray-linux-64.zip
+# Установка Xray-core
+RUN curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
+  unzip /tmp/xray.zip -d /usr/local/bin && chmod +x /usr/local/bin/xray && rm /tmp/xray.zip
 
+# Генерация UUID и конфигов при запуске
 COPY entrypoint.sh /entrypoint.sh
-COPY config.json /shadowsocks/config.json
-COPY config1.json /xray/config.json
-
-EXPOSE 8388
-EXPOSE 9999
-EXPOSE 8080
-
 RUN chmod +x /entrypoint.sh
-RUN wget -O xray.zip https://github.com/XTLS/Xray-core/releases/download/v25.6.8/Xray-linux-64.zip && unzip xray.zip -d /xray
-RUN chmod +x /xray/xray && cp /xray/xray /usr/local/bin/
 
-ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE 8888 10000
+CMD ["/entrypoint.sh"]
