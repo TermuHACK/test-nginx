@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: vpn-hub
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: PORT
+        value: 80
