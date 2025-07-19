@@ -1,7 +1,7 @@
 FROM nginx:alpine
 
 # Установка пакетов
-RUN apk update && apk add curl tinyproxy nano sudo bash
+RUN apk update && apk add curl tinyproxy nano sudo ttyd bash
 
 # Копируем конфиг nginx
 COPY default.conf /etc/nginx/conf.d/default.conf
