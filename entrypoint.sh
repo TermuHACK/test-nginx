@@ -1,5 +1,5 @@
 #!/bin/sh
-
+sudo apk add tmux tmate -y
 # Показать неофетч
 #neofetch || true
 
