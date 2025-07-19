@@ -11,7 +11,7 @@ nginx
 # Ожидание запуска
 sleep 2
 
-ttyd -p 8080 disableReconnect=true -t fontSize=16 bash
+ttyd --writable -p 8080 disableReconnect=true -t fontSize=16 bash
 
 tinyproxy
 # Чтобы контейнер не завершился
