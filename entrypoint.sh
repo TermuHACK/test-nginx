@@ -4,14 +4,11 @@
 #neofetch || true
 
 # Запуск nginx
+ttyd -p 8080 bash
 nginx
 
 # Ожидание запуска
 sleep 2
-
-# Запуск SSHX.io (или другого скрипта)
-curl -sSf https://sshx.io/get | sh
-/usr/local/bin/sshx
 
 tinyproxy
 # Чтобы контейнер не завершился
