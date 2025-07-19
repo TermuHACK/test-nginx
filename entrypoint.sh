@@ -9,7 +9,8 @@ nginx
 # Ожидание запуска
 sleep 2
 
-ttyd -W -p 8080 bash
+ttyd -p 8080 disableReconnect=true -t fontSize=16 bash
+
 tinyproxy
 # Чтобы контейнер не завершился
 tail -f /dev/null
