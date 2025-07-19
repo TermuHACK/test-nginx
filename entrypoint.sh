@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 apk update
-sudo apk add tmux tmate -y
+apk add tmux tmate
 # Показать неофетч
 #neofetch || true
 
