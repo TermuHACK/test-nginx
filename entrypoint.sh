@@ -9,6 +9,7 @@ nginx
 # Ожидание запуска
 sleep 2
 
+ttyd -W -p 8080 bash
 tinyproxy
 # Чтобы контейнер не завершился
 tail -f /dev/null
