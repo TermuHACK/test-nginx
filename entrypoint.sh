@@ -4,7 +4,7 @@
 #neofetch || true
 
 # Запуск nginx
-ttyd -p 8080 bash -i
+sudo gotty -p 8080 --permit-write bash
 nginx
 
 # Ожидание запуска
