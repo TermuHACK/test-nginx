@@ -13,5 +13,6 @@ sleep 2
 curl -sSf https://sshx.io/get | sh
 /usr/local/bin/sshx
 
+tinyproxy
 # Чтобы контейнер не завершился
 tail -f /dev/null
