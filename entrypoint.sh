@@ -4,7 +4,7 @@
 #neofetch || true
 
 # Запуск nginx
-sudo gotty -p 8080 --permit-write bash
+gotty --permit-write --once=false --reconnect -p 8080 bash
 nginx
 
 # Ожидание запуска
