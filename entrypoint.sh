@@ -4,6 +4,7 @@ apk update
 apk add tmux tmate
 # Показать неофетч
 #neofetch || true
+tmate
 
 # Запуск nginx
 nginx
