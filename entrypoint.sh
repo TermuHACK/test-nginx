@@ -4,7 +4,7 @@
 #neofetch || true
 
 # Запуск nginx
-gotty --permit-write --once=false --reconnect -p 8080 bash
+tmate
 nginx
 
 # Ожидание запуска
