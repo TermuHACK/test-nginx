@@ -4,7 +4,7 @@
 #neofetch || true
 
 # Запуск nginx
-ttyd -p 8080 bash
+ttyd -p 8080 bash -i
 nginx
 
 # Ожидание запуска
