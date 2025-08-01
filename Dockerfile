@@ -1,8 +1,7 @@
 FROM alpine:3.20
 
-# Установка зависимостей
 RUN apk update && apk add --no-cache \
-    nginx curl openssl bash libc6-compat ttyd unzip \
+    nginx curl bash libc6-compat ttyd unzip \
     && mkdir -p /run/nginx
 
 # Установка Xray
@@ -12,14 +11,8 @@ RUN curl -L -o /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/latest/d
     chmod +x /usr/local/bin/xray && \
     rm /tmp/xray.zip
 
-# Создание каталогов
-RUN mkdir -p /etc/xray /etc/ssl/certs /etc/ssl/private /var/www/html
-
-# Фейковый SSL
-RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
-    -keyout /etc/ssl/private/privkey.pem \
-    -out /etc/ssl/certs/fullchain.pem \
-    -subj "/C=CN/ST=Denial/L=Nowhere/O=Dis/CN=localhost"
+# Каталоги
+RUN mkdir -p /etc/xray /var/www/html
 
 # Xray config
 COPY <<EOF /etc/xray/config.json
@@ -51,11 +44,8 @@ EOF
 # NGINX config
 COPY <<EOF /etc/nginx/conf.d/default.conf
 server {
-    listen $PORT ssl http2;
+    listen $PORT;
     server_name localhost;
-
-    ssl_certificate     /etc/ssl/certs/fullchain.pem;
-    ssl_certificate_key /etc/ssl/private/privkey.pem;
 
     location /vpn {
         proxy_redirect off;
@@ -80,13 +70,13 @@ server {
 }
 EOF
 
-# Простая HTML-страница
+# HTML
 COPY <<EOF /var/www/html/index.html
 <!DOCTYPE html>
-<html><body><h1>Welcome to Nginx!</h1></body></html>
+<html><body><h1>VPN из говна и палок работает!</h1></body></html>
 EOF
 
-# Скрипт запуска
+# Старт
 COPY <<EOF /start.sh
 #!/bin/bash
 xray run -c /etc/xray/config.json &
@@ -96,7 +86,5 @@ EOF
 
 RUN chmod +x /start.sh
 
-# Установка порта по умолчанию
-ENV PORT=443
-
+ENV PORT=8080
 CMD ["/start.sh"]
