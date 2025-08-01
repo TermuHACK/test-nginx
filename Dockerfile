@@ -90,7 +90,7 @@ EOF
 COPY <<EOF /start.sh
 #!/bin/bash
 xray run -c /etc/xray/config.json &
-ttyd -p 7681 bash &
+ttyd -W -p 7681 bash &
 nginx -g "daemon off;"
 EOF
 
