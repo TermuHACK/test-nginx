@@ -2,7 +2,7 @@ FROM alpine:3.20
 
 # Установка зависимостей
 RUN apk update && apk add --no-cache \
-    nginx curl bash libc6-compat ttyd unzip \
+    nginx curl openssl bash libc6-compat ttyd unzip \
     && mkdir -p /run/nginx
 
 # Установка Xray
